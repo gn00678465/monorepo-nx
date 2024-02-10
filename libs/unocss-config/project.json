@@ -1,0 +1,7 @@
+{
+  "name": "unocss-config",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/unocss-config/src",
+  "projectType": "library",
+  "tags": []
+}
