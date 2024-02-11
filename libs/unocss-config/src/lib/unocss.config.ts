@@ -1,5 +1,4 @@
 import {
-  defineConfig,
   presetAttributify,
   presetIcons,
   presetUno,
@@ -8,9 +7,9 @@ import {
   presetTypography,
   presetWebFonts
 } from 'unocss';
-import type { ConfigBase } from 'unocss';
+import type { UserConfig } from 'unocss';
 
-export default defineConfig({
+export const config: UserConfig = {
   content: {
     pipeline: {
       exclude: ['node_modules', '.git', 'dist']
@@ -51,4 +50,4 @@ export default defineConfig({
     'flex-x-center': 'flex justify-center',
     'flex-y-center': 'flex items-center'
   }
-}) as ConfigBase;
+};
