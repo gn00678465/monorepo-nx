@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@monorepo-nx/unocss-config": ["libs/unocss-config/src/index.ts"]
+      "@monorepo-nx/unocss-config": ["libs/unocss-config/src/index.ts"],
+      "@monorepo-nx/vue-transitions": [
+        "libs/components/vue-transitions/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

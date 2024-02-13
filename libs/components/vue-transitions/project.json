@@ -1,0 +1,8 @@
+{
+  "name": "vue-transitions",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/components/vue-transitions/src",
+  "projectType": "library",
+  "tags": ["type:component"],
+  "targets": {}
+}
