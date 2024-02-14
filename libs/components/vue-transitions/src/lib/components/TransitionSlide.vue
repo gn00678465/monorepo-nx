@@ -3,7 +3,7 @@
     :is="Transition"
     name="slide"
     v-bind="{ ...otherProps, ...attrs, duration }"
-    v-on="hooks({ onEnter, onLeave, resetElement })"
+    v-on="hooks({ onEnter, onLeave, resetElement, initLeaving })"
   >
     <slot></slot>
   </component>
@@ -31,7 +31,8 @@ import {
   defaultValue,
   getMatrix,
   hooks,
-  setupTransition
+  setupTransition,
+  initLeaving
 } from '../utility/index';
 import type { Easing, Delay, SlideOffset, Event } from '../types';
 
@@ -123,8 +124,5 @@ function resetElement(el: Element) {
 </script>
 
 <style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition-property: opacity, transform !important;
-}
+@import url('../styles//slide.css');
 </style>

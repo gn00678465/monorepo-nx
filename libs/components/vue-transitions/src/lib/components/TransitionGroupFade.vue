@@ -1,41 +1,54 @@
 <template>
   <component
-    :is="Transition"
+    :is="TransitionGroup"
     name="fade"
+    :style="rootStyle"
     v-bind="{ ...otherProps, ...attrs, duration }"
-    v-on="hooks({ onEnter, onLeave, resetElement, initLeaving })"
+    v-on="hooks({ onEnter, onLeave, resetElement })"
   >
     <slot></slot>
   </component>
 </template>
 
 <script lang="ts">
-export interface TransitionFadeProps extends Omit<TransitionProps, 'name'> {
+export interface TransitionGroupFadeProps
+  extends Omit<TransitionGroupProps, 'name'> {
   easing?: Easing;
   delay?: Delay;
+  moveDuration?: number;
 }
 
 export default {
-  name: 'TransitionFade',
+  name: 'TransitionGroupFade',
   inheritAttrs: false
 };
 </script>
 
 <script setup lang="ts">
-import { Transition, toRefs, toValue, reactive, useAttrs, nextTick } from 'vue';
-import type { TransitionProps } from 'vue';
 import {
-  defaultValue,
-  hooks,
-  setupTransition,
-  initLeaving
-} from '../utility/index';
+  TransitionGroup,
+  toRefs,
+  toValue,
+  reactive,
+  useAttrs,
+  nextTick,
+  computed
+} from 'vue';
+import type { TransitionGroupProps } from 'vue';
+import { defaultValue, hooks, setupTransition } from '../utility/index';
 import type { Easing, Delay } from '../types';
 
-const props = withDefaults(defineProps<TransitionFadeProps>(), defaultValue);
-const { delay, duration, easing, ..._props } = toRefs(props);
+const props = withDefaults(defineProps<TransitionGroupFadeProps>(), {
+  ...defaultValue,
+  moveDuration: 300
+});
+const { delay, duration, easing, moveDuration, ..._props } = toRefs(props);
 const otherProps = reactive(_props);
 const attrs = useAttrs();
+
+const rootStyle = computed(() => ({
+  '--move-duration': `${toValue(moveDuration)}ms`
+}));
 
 function onEnter(el: Element) {
   fadeElement(el);

@@ -1,0 +1,4 @@
+.slide-enter-active,
+.slide-leave-active {
+  transition-property: opacity, transform !important;
+}

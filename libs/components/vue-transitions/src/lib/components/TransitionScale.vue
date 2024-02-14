@@ -3,7 +3,7 @@
     :is="Transition"
     name="scale"
     v-bind="{ ...otherProps, ...attrs, duration }"
-    v-on="hooks({ onEnter, onLeave, resetElement })"
+    v-on="hooks({ onEnter, onLeave, resetElement, initLeaving })"
   >
     <slot></slot>
   </component>
@@ -33,7 +33,8 @@ import {
   hooks,
   setupTransition,
   getMatrix,
-  getValue
+  getValue,
+  initLeaving
 } from '../utility/index';
 import type {
   Easing,
@@ -129,4 +130,6 @@ function resetElement(el: Element) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+@import url('../styles/scale.css');
+</style>

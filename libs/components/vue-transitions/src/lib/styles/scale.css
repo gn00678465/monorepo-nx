@@ -1,0 +1,4 @@
+.scale-enter-active,
+.scale-leave-active {
+  transition-property: opacity, transform !important;
+}

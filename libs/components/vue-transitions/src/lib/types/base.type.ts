@@ -26,6 +26,7 @@ export interface HooksOptions {
   onEnter?: (el: Element, done?: () => void) => void;
   onLeave?: (el: Element, done?: () => void) => void;
   resetElement?: (el: Element) => void;
+  initLeaving?: (el: Element) => Element;
 }
 
 // transition slide
