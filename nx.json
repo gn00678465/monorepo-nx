@@ -28,6 +28,15 @@
         "serveTargetName": "serve",
         "serveStaticTargetName": "serve-static"
       }
+    },
+    {
+      "plugin": "@nx/storybook/plugin",
+      "options": {
+        "buildStorybookTargetName": "build-storybook",
+        "serveStorybookTargetName": "storybook",
+        "testStorybookTargetName": "test-storybook",
+        "staticStorybookTargetName": "static-storybook"
+      }
     }
   ],
   "targetDefaults": {
