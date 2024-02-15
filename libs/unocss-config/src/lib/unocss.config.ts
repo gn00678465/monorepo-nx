@@ -12,7 +12,7 @@ import type { UserConfig } from 'unocss';
 export const config: UserConfig = {
   content: {
     pipeline: {
-      exclude: ['node_modules', '.git', 'dist']
+      exclude: ['node_modules', '.git', 'dist', '.nx']
     }
   },
   presets: [
@@ -49,5 +49,9 @@ export const config: UserConfig = {
     'flex-col-center': 'flex-center flex-col',
     'flex-x-center': 'flex justify-center',
     'flex-y-center': 'flex items-center'
-  }
+  },
+  rules: [
+    [/^m-(\d+)$/, ([, d]) => ({ margin: `${parseInt(d) / 4}rem` })],
+    [/^p-(\d+)$/, (match) => ({ padding: `${parseInt(match[1]) / 4}rem` })]
+  ]
 };

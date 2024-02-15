@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "vue": "^3.4.18",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "@unocss/reset": "^0.58.5"
   }
 }
