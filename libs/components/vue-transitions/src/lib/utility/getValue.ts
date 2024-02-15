@@ -6,6 +6,6 @@ export function getValue<T>(
   defaultValue: T
 ): T {
   if (value === undefined || value === null) return defaultValue;
-  if (typeof value === 'object') return (value as Record<Event, T>)[event];
+  if (typeof value === 'object' && !Array.isArray(value)) return (value as Record<Event, T>)[event];
   return value;
 }
