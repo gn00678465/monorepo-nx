@@ -6,27 +6,43 @@ import type { AdminLayoutProps, AdminLayoutSlots } from './types';
 
 const props = withDefaults(defineProps<AdminLayoutProps>(), {
   mode: 'vertical',
+  scrollMode: 'content',
   fixedTop: true,
-  commonClass: undefined,
+  commonClass: 'transition-all-300',
   headerVisible: true,
   headerHeight: 50,
   tabVisible: true,
   tabHeight: 48,
   sidebarVisible: true,
   sidebarCollapse: false,
+  mobileSidebarCollapse: false,
   sidebarWidth: 240,
   sidebarCollapsedWidth: 64,
   footerVisible: true,
-  footerHeight: 48
+  footerHeight: 48,
+  rightFooter: false
 });
 
-const { commonClass, fullContent } = toRefs(props);
+const { commonClass, fullContent, sidebarCollapse, mobileSidebarCollapse } =
+  toRefs(props);
+
+const emits = defineEmits<{
+  'click-mobile-sidebar-mask': [];
+}>();
 
 const slots = defineSlots<AdminLayoutSlots>();
 
 const cssVars = computed(() => createAdminLayoutCssVars(props));
 
-const visible = reactive({
+type TagNames =
+  | 'header'
+  | 'tab'
+  | 'sidebar'
+  | 'mobileSidebar'
+  | 'content'
+  | 'footer';
+
+const visible: Record<Exclude<TagNames, 'content'>, boolean> = reactive({
   header: computed(() => Boolean(slots.header) && props.headerVisible),
   tab: computed(() => Boolean(slots.tab) && props.tabVisible),
   sidebar: computed(
@@ -38,13 +54,23 @@ const visible = reactive({
   footer: computed(() => Boolean(slots.footer) && props.footerVisible)
 });
 
+/** 滾動模式 */
+const isWrapperScroll = computed(() => props.scrollMode === 'wrapper');
+const isContentScroll = computed(() => props.scrollMode === 'content');
+
+/** layout 模式 */
 const isVertical = computed(() => props.mode === 'vertical');
 const isHorizontal = computed(() => props.mode === 'horizontal');
 
 /** fixed header adn tab */
-const fixedHeaderAndTab = computed(() => props.fixedTop || isHorizontal.value);
+const fixedHeaderAndTab = computed(
+  () => props.fixedTop || (isHorizontal.value && isWrapperScroll.value)
+);
 
-const classes = reactive({
+/**
+ * 各部位的基本 class
+ */
+const classes: Record<TagNames, (string | undefined)[]> = reactive({
   header: computed(() => [
     style['layout-header'],
     toValue(commonClass),
@@ -55,13 +81,7 @@ const classes = reactive({
     toValue(commonClass),
     props.tabClass
   ]),
-  sideBar: computed(() => [
-    toValue(commonClass),
-    props.sidebarClass,
-    props.sidebarCollapse
-      ? style['layout-sidebar_collapsed']
-      : style['layout-sidebar']
-  ]),
+  sidebar: computed(() => [toValue(commonClass), props.sidebarClass]),
   content: computed(() => [toValue(commonClass), props.contentClass]),
   mobileSidebar: computed(() => [
     toValue(commonClass),
@@ -74,17 +94,48 @@ const classes = reactive({
   ])
 });
 
-const leftGapClass = reactive({
-  content: computed(() => {
+const leftGapClass: Record<
+  Extract<TagNames, 'header' | 'footer'> | 'default',
+  string
+> = reactive({
+  default: computed(() => {
     if (!props.fullContent && visible.sidebar) {
       return props.sidebarCollapse
         ? style['left-gap_collapsed']
         : style['left-gap'];
     }
+    return '';
+  }),
+  header: computed(() => (isVertical.value ? leftGapClass.default : '')),
+  footer: computed(() => {
+    const condition1 = isVertical.value;
+    const condition2 =
+      isHorizontal.value && isWrapperScroll.value && !props.fixedFooter;
+    const condition3 = Boolean(isHorizontal.value && props.rightFooter);
 
+    if (condition1 || condition2 || condition3) {
+      return leftGapClass.default;
+    }
     return '';
   })
 });
+
+const sidebarPaddingClass = computed<string>(() => {
+  let cls = '';
+
+  if (visible.header && !leftGapClass.header) {
+    cls += style['sidebar-padding-top'];
+  }
+  if (visible.footer && !leftGapClass.footer) {
+    cls += ` ${style['sidebar-padding-bottom']}`;
+  }
+
+  return cls;
+});
+
+function handleClickMask() {
+  emits('click-mobile-sidebar-mask');
+}
 </script>
 
 <template>
@@ -96,6 +147,7 @@ const leftGapClass = reactive({
           v-show="!fullContent"
           :class="[
             ...classes.header,
+            leftGapClass.header,
             'flex-shrink-0',
             { 'absolute left-0 top-0 w-full': fixedHeaderAndTab }
           ]"
@@ -116,6 +168,7 @@ const leftGapClass = reactive({
           v-show="!fullContent"
           :class="[
             ...classes.tab,
+            leftGapClass.default,
             'flex-shrink-0',
             { 'top-0!': !visible.header },
             { 'absolute left-0 w-full': fixedHeaderAndTab }
@@ -135,23 +188,45 @@ const leftGapClass = reactive({
       <template v-if="visible.sidebar">
         <aside
           v-show="!fullContent"
-          :class="[...classes.sideBar, 'absolute left-0 top-0 h-full']"
+          :class="[
+            ...classes.sidebar,
+            sidebarPaddingClass,
+            'absolute left-0 top-0 h-full',
+            sidebarCollapse
+              ? style['layout-sidebar_collapsed']
+              : style['layout-sidebar']
+          ]"
         >
           <slot name="sidebar"></slot>
         </aside>
       </template>
       <!-- sidebar(mobile) -->
       <template v-if="visible.mobileSidebar">
-        <aside :class="[...classes.mobileSidebar]">
+        <aside
+          :class="[
+            ...classes.mobileSidebar,
+            'absolute left-0 top-0 h-full w-0 bg-white',
+            style['layout-mobile-sidebar'],
+            !mobileSidebarCollapse ? 'overflow-hidden' : style['active']
+          ]"
+        >
           <slot name="sidebar"></slot>
         </aside>
+        <div
+          v-show="mobileSidebarCollapse"
+          :class="[
+            'bg-black-0.2 absolute left-0 top-0 h-full w-full',
+            style['layout-mobile-sidebar-mask']
+          ]"
+          @click="handleClickMask"
+        ></div>
       </template>
       <!-- main content -->
       <main
         :class="[
           ...classes.content,
           'flex flex-grow flex-col',
-          leftGapClass.content
+          leftGapClass.default
         ]"
       >
         <slot></slot>
@@ -162,12 +237,20 @@ const leftGapClass = reactive({
           v-show="!fullContent"
           :class="[
             ...classes.footer,
+            leftGapClass.footer,
             'flex-shrink-0',
             { 'absolute bottom-0 left-0 w-full': fixedFooter }
           ]"
         >
           <slot name="footer"></slot>
         </footer>
+        <div
+          v-show="!fullContent && fixedFooter"
+          :class="[
+            style['layout-footer-placement'],
+            'flex-shrink-0 overflow-hidden'
+          ]"
+        ></div>
       </template>
     </div>
   </div>

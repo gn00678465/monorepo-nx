@@ -20,6 +20,7 @@ interface SidebarConfig {
 
 interface MobileSidebarConfig {
   mobileSidebarClass?: string;
+  mobileSidebarCollapse?: boolean;
 }
 
 interface ContentConfig {
@@ -37,6 +38,10 @@ interface FooterConfig {
   fixedFooter?: boolean;
   footerClass?: string;
   footerHeight?: number;
+  /**
+   * layout mode 為 vertical 時
+   */
+  rightFooter?: boolean;
 }
 
 /**
@@ -45,6 +50,13 @@ interface FooterConfig {
  * - vertical 垂直
  */
 export type LayoutMode = 'horizontal' | 'vertical';
+
+/**
+ * 滾動模式
+ * - wrapper 最外層出現滾動條
+ * - content 主要內容出現滾動條
+ */
+export type ScrollMode = 'wrapper' | 'content';
 
 export interface AdminLayoutProps
   extends HeaderConfig,
@@ -55,8 +67,14 @@ export interface AdminLayoutProps
     FooterConfig {
   /**
    * layout 模式
+   * {@link LayoutMode}
    */
   mode?: LayoutMode;
+  /**
+   * 滾動條模式
+   * {@link ScrollMode}
+   */
+  scrollMode?: ScrollMode;
   /**
    * 是否為可攜式裝置
    */

@@ -53,3 +53,15 @@
 .overflow-y-auto {
   overflow-y: auto;
 }
+
+.transition-all-300 {
+  transition: all 0.3s ease-in-out;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.bg-black-0\.2 {
+  background: rgba(0, 0, 0, 0.2);
+}

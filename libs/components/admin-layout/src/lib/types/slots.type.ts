@@ -1,4 +1,5 @@
-type SlotFn = (props?: Record<string, unknown>) => unknown;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SlotFn<T = Record<string, unknown>> = (props?: T) => any;
 
 export type AdminLayoutSlots = {
   /** content slot */

@@ -24,11 +24,17 @@
 }
 
 .layout-mobile-sidebar {
-  z-index: var(--sidebar-z-index);
+  z-index: var(--sidebar-z-index, 2999);
+  width: var(--sidebar-width);
+  transform: translateX(calc(var(--sidebar-width) * -1));
+}
+
+.layout-mobile-sidebar.active {
+  transform: translateX(0);
 }
 
 .layout-mobile-sidebar-mask {
-  z-index: var(--mobile-sidebar-z-index);
+  z-index: var(--mobile-sidebar-z-index, 2998);
 }
 
 .layout-sidebar_collapsed {
