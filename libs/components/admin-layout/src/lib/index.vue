@@ -23,8 +23,13 @@ const props = withDefaults(defineProps<AdminLayoutProps>(), {
   rightFooter: false
 });
 
-const { commonClass, fullContent, sidebarCollapse, mobileSidebarCollapse } =
-  toRefs(props);
+const {
+  commonClass,
+  fullContent,
+  sidebarCollapse,
+  mobileSidebarCollapse,
+  scrollWrapperClass
+} = toRefs(props);
 
 const emits = defineEmits<{
   'click-mobile-sidebar-mask': [];
@@ -140,7 +145,14 @@ function handleClickMask() {
 
 <template>
   <div :style="cssVars" :class="['relative h-full', commonClass]">
-    <div :class="['flex h-full flex-col', commonClass]">
+    <div
+      :class="[
+        'flex h-full flex-col',
+        commonClass,
+        scrollWrapperClass,
+        { 'overflow-y-auto': isWrapperScroll }
+      ]"
+    >
       <!-- header -->
       <template v-if="visible.header">
         <header
@@ -197,7 +209,12 @@ function handleClickMask() {
               : style['layout-sidebar']
           ]"
         >
-          <slot name="sidebar"></slot>
+          <slot
+            name="sidebar"
+            :sidebarCollapse="sidebarCollapse"
+            :sidebarWidth="props.sidebarWidth"
+            :sidebarCollapsedWidth="props.sidebarCollapsedWidth"
+          ></slot>
         </aside>
       </template>
       <!-- sidebar(mobile) -->
@@ -210,7 +227,13 @@ function handleClickMask() {
             !mobileSidebarCollapse ? 'overflow-hidden' : style['active']
           ]"
         >
-          <slot name="sidebar"></slot>
+          <slot
+            name="sidebar"
+            :sidebarCollapse="false"
+            :sidebarWidth="props.sidebarWidth"
+            :sidebarCollapsedWidth="props.sidebarCollapsedWidth"
+            :mobileSidebarCollapse="mobileSidebarCollapse"
+          ></slot>
         </aside>
         <div
           v-show="mobileSidebarCollapse"
@@ -226,7 +249,8 @@ function handleClickMask() {
         :class="[
           ...classes.content,
           'flex flex-grow flex-col',
-          leftGapClass.default
+          leftGapClass.default,
+          { 'overflow-y-auto': isContentScroll }
         ]"
       >
         <slot></slot>
