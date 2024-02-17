@@ -75,6 +75,7 @@ export interface AdminLayoutProps
    * {@link ScrollMode}
    */
   scrollMode?: ScrollMode;
+  scrollWrapperClass?: string;
   /**
    * 是否為可攜式裝置
    */
