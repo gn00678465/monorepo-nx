@@ -8,7 +8,10 @@ export type CssVarsProps = Pick<
   | 'sidebarWidth'
   | 'sidebarCollapsedWidth'
   | 'footerHeight'
->;
+> & {
+  sidebarZIndex?: number;
+  mobileSidebarZIndex?: number;
+};
 
 export type CssVars = {
   [K in keyof CssVarsProps as `--${KebabCase<K>}`]: string | number;
