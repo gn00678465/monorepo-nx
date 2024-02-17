@@ -1,5 +1,15 @@
+import type { SidebarConfig, MobileSidebarConfig } from './props.type';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SlotFn<T = Record<string, unknown>> = (props?: T) => any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SlotFnRequire<T = Record<string, unknown>> = (props: T) => any;
+
+export type SidebarScopeSlotProps = Pick<
+  SidebarConfig,
+  'sidebarCollapse' | 'sidebarWidth' | 'sidebarCollapsedWidth'
+> &
+  Partial<Pick<MobileSidebarConfig, 'mobileSidebarCollapse'>>;
 
 export type AdminLayoutSlots = {
   /** content slot */
@@ -9,7 +19,7 @@ export type AdminLayoutSlots = {
   /** tab slot */
   tab?: SlotFn;
   /** sidebar slot */
-  sidebar?: SlotFn;
+  sidebar?: SlotFnRequire<SidebarScopeSlotProps>;
   /** footer slot */
   footer?: SlotFn;
 };

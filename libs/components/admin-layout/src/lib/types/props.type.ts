@@ -10,7 +10,7 @@ interface TabConfig {
   tabHeight?: number;
 }
 
-interface SidebarConfig {
+export interface SidebarConfig {
   sidebarVisible?: boolean;
   sidebarClass?: string;
   sidebarCollapse?: boolean;
@@ -18,7 +18,7 @@ interface SidebarConfig {
   sidebarCollapsedWidth?: number;
 }
 
-interface MobileSidebarConfig {
+export interface MobileSidebarConfig {
   mobileSidebarClass?: string;
   mobileSidebarCollapse?: boolean;
 }
