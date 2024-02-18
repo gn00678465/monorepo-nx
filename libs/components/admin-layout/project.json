@@ -1,0 +1,8 @@
+{
+  "name": "admin-layout",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/components/admin-layout/src",
+  "projectType": "library",
+  "tags": ["scope:components"],
+  "targets": {}
+}
